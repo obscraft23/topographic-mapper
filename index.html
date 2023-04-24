@@ -58,7 +58,7 @@
         let lon1;
          // initialize map
         var map = L.map('map');
-        map.setView([35.45665000923617, 139.0415954589844],15); 
+        map.setView([36.62335945025434, 137.61721909046176],15); 
         L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
             attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"
         }).addTo(map);
@@ -83,9 +83,9 @@
             
             if ( mag_check.checked) {mag = 'true';}
             else {mag = 'false';}
-            console.log('https://topographic-mapper.onrender.com/api/mapper?lat0=' + lat0 + '&lon0=' + lon0 + '&lat1=' + lat1 + '&lon1=' + lon1 + '&magnetic_north_line=' + mag)
+            //console.log('http://xs239613.xsrv.jp/api/mapper?lat0=' + lat0 + '&lon0=' + lon0 + '&lat1=' + lat1 + '&lon1=' + lon1 + '&magnetic_north_line=' + mag)
             $.ajax({
-		        url:'https://topographic-mapper.onrender.com/api/mapper?lat0=' + lat0 + '&lon0=' + lon0 + '&lat1=' + lat1 + '&lon1=' + lon1 + '&magnetic_north_line=' + mag,
+		        url:'http://xs239613.xsrv.jp/api/mapper?lat0=' + lat0 + '&lon0=' + lon0 + '&lat1=' + lat1 + '&lon1=' + lon1 + '&magnetic_north_line=' + mag,
                 type: "GET",
 
 		        beforeSend:function(){
