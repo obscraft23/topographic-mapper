@@ -80,12 +80,12 @@
 	        var $loading = $(".loading");
             let mag_check = document.getElementById('mag_check');
             let mag;
-            console.log(mag_check.checked)
+            
             if ( mag_check.checked) {mag = 'true';}
             else {mag = 'false';}
-            console.log('http://127.0.0.1:8000/api/mapper?lat0=' + lat0 + '&lon0=' + lon0 + '&lat1=' + lat1 + '&lon1=' + lon1 + '&magnetic_north_line=' + mag)
-	        $.ajax({
-		        url:'http://127.0.0.1:8000/api/mapper?lat0=' + lat0 + '&lon0=' + lon0 + '&lat1=' + lat1 + '&lon1=' + lon1 + '&magnetic_north_line=' + mag,
+            console.log('https://topographic-mapper.onrender.com/api/mapper?lat0=' + lat0 + '&lon0=' + lon0 + '&lat1=' + lat1 + '&lon1=' + lon1 + '&magnetic_north_line=' + mag)
+            $.ajax({
+		        url:'https://topographic-mapper.onrender.com/api/mapper?lat0=' + lat0 + '&lon0=' + lon0 + '&lat1=' + lat1 + '&lon1=' + lon1 + '&magnetic_north_line=' + mag,
                 type: "GET",
 
 		        beforeSend:function(){
@@ -93,7 +93,7 @@
 		        },
                 
                 success: function(data){
-                    console.log(data.datab64)
+                    
                     $loading.addClass("is-hide");
 
                     var img = document.getElementById("image_file");
