@@ -33,6 +33,6 @@ def mapper(lat0: float, lat1: float, lon0: float, lon1: float, magnetic_north_li
     #print(time.time() - stime)
     return JSONResponse(content={"datab64" :base64_data})
 
-@app.get("/api/health", response_class=JSONResponse)
+@app.get("/healthz")
 def health_check():
-    return JSONResponse(content={"status" :"OK"})
+    return Response(content="OK\n")
