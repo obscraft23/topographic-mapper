@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>詳細地形図ジェネレーター</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="icon" type="image/png" href="./mountain_ama_dablam.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./mountain_ama_dablam.png">
+    <link rel="stylesheet" href="./style.css" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-area-select-npm@2.0.1/dist/leaflet-areaselect.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+</head>
+<body>
+    <div class="loading is-hide" style="z-index:10000; width:100%; text-align: center;">
+        <div class="loading_icon">
+        </div>
+    </div>
+    <div class ="center" style="width:100%; text-align: center;">
+        <div style="width:100%;">
+            <div class="map" id="map" style="width:600px;height:600px;"></div>
+
+            <div id="result" style="width:600px; height: auto; text-align: left;">
+                <div>
+                    国土地理院が公開する標高データ（DEM5AおよびDEM10B）をもとに、選択範囲の詳細地形図を作成します。選択領域が大きいと、時間がかかります。<br>
+                    <font size="1">出典: <a href=https://github.com/gsi-cyberjapan/experimental_dem>国土地理院ベクトルタイル提供実験（基盤地図情報（数値標高モデル））</a></font>
+                </div>
+                <br>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="mag_check">
+                    <label class="form-check-label" for="mag_check">
+                        磁北線
+                    </label>
+                </div>
+                <div>
+                    <button id="create" type="button" class="btn btn-success">作成</button>
+                    <button id="view" type="button" class="btn btn-primary">プレビュー表示/非表示</button>
+                </div>
+                <input type="text" class="sw" hidden />
+                <input type="text" class="ne" hidden />
+            </div>
+                         
+            <div class="image_viewer" id="image_viewer" style="width:600px; height: auto;">
+                <div id="status">ここに画像が表示されます。</div>
+                <img id="image_file" style="width:600px;" src="">
+            </div>
+        </div>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-area-select-npm@2.0.1/dist/leaflet-areaselect.min.js"></script>
+    <script>
+        
+        let lat0;
+        let lon0;
+        let lat1;
+        let lon1;
+         // initialize map
+        var map = L.map('map');
+        map.setView([35.45665000923617, 139.0415954589844],15); 
+        L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
+            attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"
+        }).addTo(map);
+        
+        var areaSelect = L.areaSelect({width:200, height:282.842712, keepAspectRatio:true});
+        areaSelect.on("change", function() {
+            var bounds = this.getBounds();
+            lat0 = bounds.getSouthWest().lat;
+            lon0 = bounds.getSouthWest().lng;
+            lat1 = bounds.getNorthEast().lat;
+            lon1 = bounds.getNorthEast().lng;
+            //$("#result .width").val(bounds.getNorthEast().lat + ", " + bounds.getNorthEast().lng);
+        
+        });
+        areaSelect.addTo(map);
+    </script>
+    <script>
+        $("#create").click(function(){
+	        var $loading = $(".loading");
+            let mag_check = document.getElementById('mag_check');
+            let mag;
+            console.log(mag_check.checked)
+            if ( mag_check.checked) {mag = 'true';}
+            else {mag = 'false';}
+            console.log('http://127.0.0.1:8000/api/mapper?lat0=' + lat0 + '&lon0=' + lon0 + '&lat1=' + lat1 + '&lon1=' + lon1 + '&magnetic_north_line=' + mag)
+	        $.ajax({
+		        url:'http://127.0.0.1:8000/api/mapper?lat0=' + lat0 + '&lon0=' + lon0 + '&lat1=' + lat1 + '&lon1=' + lon1 + '&magnetic_north_line=' + mag,
+                type: "GET",
+
+		        beforeSend:function(){
+			        $loading.removeClass("is-hide");
+		        },
+                
+                success: function(data){
+                    console.log(data.datab64)
+                    $loading.addClass("is-hide");
+
+                    var img = document.getElementById("image_file");
+
+                    if (data.datab64 == "too large") {
+                        img.src = "";
+                        html_data = '選択領域が大きすぎます。'
+                        $("#status").html(html_data);
+                    } else {
+                        $("#status").html("");
+                        img.src = "data:image/png;base64," + data.datab64;
+                    }
+		        }
+	        });
+        });
+    </script>
+    <script>
+        $(function() {
+            $("#view").click(function() {
+                $(".image_viewer").slideToggle("3000");
+            });
+        });
+    </script>
+</body>
