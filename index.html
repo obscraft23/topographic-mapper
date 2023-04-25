@@ -6,7 +6,6 @@
     <link rel="icon" type="image/png" href="./mountain_ama_dablam.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./mountain_ama_dablam.png">
     <link rel="stylesheet" href="./style.css" />
-
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-area-select-npm@2.0.1/dist/leaflet-areaselect.min.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
@@ -20,11 +19,11 @@
     </div>
     <div class ="center" style="width:100%; text-align: center;">
         <div style="width:100%;">
-            <div class="map" id="map" style="width:600px;height:600px;"></div>
+            <div class="map" id="map" style="width:auto; height:450px;"></div>
 
-            <div id="result" style="width:600px; height: auto; text-align: left;">
+            <div id="result" style="width:auto; height: auto; text-align: left;">
                 <div>
-                    国土地理院が公開する標高データ（DEM5AおよびDEM10B）をもとに、選択範囲の詳細地形図を作成します。選択領域が大きいと、時間がかかります。<br>
+                    国土地理院が公開する標高データ（DEM5AおよびDEM10B）をもとに、選択範囲の詳細地形図を作成します。<br>選択領域が大きいと、時間がかかります。<br>
                     <font size="1">出典: <a href=https://github.com/gsi-cyberjapan/experimental_dem>国土地理院ベクトルタイル提供実験（基盤地図情報（数値標高モデル））</a></font>
                 </div>
                 <br>
@@ -42,9 +41,10 @@
                 <input type="text" class="ne" hidden />
             </div>
                          
-            <div class="image_viewer" id="image_viewer" style="width:600px; height: auto;">
+            <div class="image_viewer" id="image_viewer" style="width:auto; height: auto;">
                 <div id="status">ここに画像が表示されます。</div>
-                <img id="image_file" style="width:600px;" src="">
+                <div id="image_created"></div>
+                <img id="image_file" src="">
             </div>
         </div>
     </div>
@@ -96,15 +96,21 @@
                     
                     $loading.addClass("is-hide");
 
-                    var img = document.getElementById("image_file");
-
                     if (data.datab64 == "too large") {
-                        img.src = "";
                         html_data = '選択領域が大きすぎます。'
                         $("#status").html(html_data);
+                        $("#image_created").html("");
                     } else {
+                        imgsrc = "data:image/png;base64," + data.datab64;
+                        console.log(window.outerWidth)
+                        if (window.outerWidth > 320 ) { 
+                            imgwidth = window.outerWidth*2/3; 
+                        } else { 
+                            imgwidth = window.outerWidth;
+                        }
+
                         $("#status").html("");
-                        img.src = "data:image/png;base64," + data.datab64;
+                        $("#image_created").html('<img style="width: '+imgwidth+'px;" src='+imgsrc+' >')
                     }
 		        }
 	        });
