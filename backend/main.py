@@ -1,11 +1,16 @@
 import io
 import base64
+import sys
+import os
 
 from fastapi import FastAPI, Response, File, UploadFile
 from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
 import altmap
 import time
+
+sys.path.append(os.path.basename(__file__))
+from printer import login, upload, checkfile
 
 app = FastAPI()
 
@@ -36,21 +41,27 @@ def mapper(lat0: float, lat1: float, lon0: float, lon1: float, magnetic_north_li
 def health_check():
     return Response(content="OK\n")
 
-@app.post("/api/netprint")
+@app.post("/api/netprint", response_class=JSONResponse)
 def registerNetprint(file: UploadFile = File(...)):
-    
-    print(dir(file))
 
-    tmp = file.file.read()
-    #print(tmp)
-    #print(file.filename)
+    try:
+        data = base64.b64decode(file.file.read())
 
-    
-    data = base64.b64decode(tmp)
+        authToken, userCode = login()
+        registerName = "test.png"
 
-    with open("/home/yyoshimura/geo/test.b64.png","wb") as f:
-        f.write(data)
+        upload(authToken,data,registerName)
+        preview_url,dd = checkfile(authToken)
+        
+        resp = {
+            "result": "OK",
+            "preview_url": preview_url,
+            "user_code": userCode,
+        }
 
+    except:
+        resp = {
+            "result": "error",
+        }
     
-    return {'filename': file.filename}
-    
+    return JSONResponse(content=resp)

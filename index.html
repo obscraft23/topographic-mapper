@@ -30,9 +30,7 @@
                 <br>
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="" id="mag_check">
-                    <label class="form-check-label" for="mag_check">
-                        磁北線
-                    </label>
+                    <label class="form-check-label" for="mag_check">磁北線</label>
                 </div>
                 <div>
                     <button id="create" type="button" class="btn btn-success">作成</button>
@@ -41,11 +39,15 @@
                 <input type="text" class="sw" hidden />
                 <input type="text" class="ne" hidden />
             </div>
-                         
+            <div id="netprint" class="netprint" style="width:auto; height: auto; text-align: left;">
+                <button id="netprint" type="button" class="btn btn-secondary">ネットプリントに登録</button>&nbsp;
+                <a href="https://networkprint.ne.jp/" target="_blank">
+                    <img src="img/netprint_rogo.png" width="30%">
+                </a>
+            </div>
             <div class="image_viewer" id="image_viewer" style="width:auto; height: auto;">
                 <div id="status">ここに画像が表示されます。</div>
                 <div id="image_created"></div>
-                <img id="image_file" src="">
             </div>
         </div>
     </div>
