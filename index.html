@@ -3,9 +3,9 @@
 <head>
     <title>詳細地形図ジェネレーター</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <link rel="icon" type="image/png" href="./mountain_ama_dablam.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="./mountain_ama_dablam.png">
-    <link rel="stylesheet" href="./style.css" />
+    <link rel="icon" type="image/png" href="img/mountain_ama_dablam.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/mountain_ama_dablam.png">
+    <link rel="stylesheet" href="css/style.css" />
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-area-select-npm@2.0.1/dist/leaflet-areaselect.min.css" />
@@ -51,77 +51,7 @@
     </div>
     <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet-area-select-npm@2.0.1/dist/leaflet-areaselect.min.js"></script>
-    <script>
-        
-        let lat0;
-        let lon0;
-        let lat1;
-        let lon1;
-         // initialize map
-        var map = L.map('map');
-        map.setView([36.62335945025434, 137.61721909046176],15); 
-        L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
-            attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"
-        }).addTo(map);
-        
-        var areaSelect = L.areaSelect({width:200, height:282.842712, keepAspectRatio:true});
-        areaSelect.on("change", function() {
-            var bounds = this.getBounds();
-            lat0 = bounds.getSouthWest().lat;
-            lon0 = bounds.getSouthWest().lng;
-            lat1 = bounds.getNorthEast().lat;
-            lon1 = bounds.getNorthEast().lng;
-            //$("#result .width").val(bounds.getNorthEast().lat + ", " + bounds.getNorthEast().lng);
-        
-        });
-        areaSelect.addTo(map);
-    </script>
-    <script>
-        $("#create").click(function(){
-	        var $loading = $(".loading");
-            let mag_check = document.getElementById('mag_check');
-            let mag;
-            
-            if ( mag_check.checked) {mag = 'true';}
-            else {mag = 'false';}
-            //console.log('http://xs239613.xsrv.jp/api/mapper?lat0=' + lat0 + '&lon0=' + lon0 + '&lat1=' + lat1 + '&lon1=' + lon1 + '&magnetic_north_line=' + mag)
-            $.ajax({
-		        url:'https://xs239613.xsrv.jp/api/mapper?lat0=' + lat0 + '&lon0=' + lon0 + '&lat1=' + lat1 + '&lon1=' + lon1 + '&magnetic_north_line=' + mag,
-                type: "GET",
-
-		        beforeSend:function(){
-			        $loading.removeClass("is-hide");
-		        },
-                
-                success: function(data){
-                    
-                    $loading.addClass("is-hide");
-
-                    if (data.datab64 == "too large") {
-                        html_data = '選択領域が大きすぎます。'
-                        $("#status").html(html_data);
-                        $("#image_created").html("");
-                    } else {
-                        imgsrc = "data:image/png;base64," + data.datab64;
-                        console.log(window.outerWidth)
-                        if (window.outerWidth > 320 ) { 
-                            imgwidth = window.outerWidth*2/3; 
-                        } else { 
-                            imgwidth = window.outerWidth;
-                        }
-
-                        $("#status").html("");
-                        $("#image_created").html('<img style="width: '+imgwidth+'px;" src='+imgsrc+' >')
-                    }
-		        }
-	        });
-        });
-    </script>
-    <script>
-        $(function() {
-            $("#view").click(function() {
-                $(".image_viewer").slideToggle("3000");
-            });
-        });
-    </script>
+    <script src="js/map.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/loading.js"></script>
 </body>
