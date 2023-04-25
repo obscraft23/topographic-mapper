@@ -24,7 +24,7 @@ $("#create").click(function(){
                 $("#image_created").html("");
             } else {
                 imgsrc = "data:image/png;base64," + data.datab64;
-                console.log(window.outerWidth)
+                
                 if (window.outerWidth > 320 ) { 
                     imgwidth = window.outerWidth*2/3; 
                 } else { 
@@ -41,47 +41,59 @@ $("#create").click(function(){
 $("#netprint").click(function(){
 
     var $loading = $(".loading");
-    var image_file = document.getElementById("image_file");
+    var image_file = document.getElementById("image_file") ?? 0;
 
-    const file = image_file.src.replace("data:image/png;base64,","");
-    const formData = new FormData();
+    if (image_file != 0) {
+        
+        const file = image_file.src.replace("data:image/png;base64,","");
+        const formData = new FormData();
 
-    formData.append('file', new Blob([file], { type: 'text/plain' }), 'tmp.base64');
+        formData.append('file', new Blob([file], { type: 'text/plain' }), 'tmp.base64');
 
-    $.ajax({
-        url: 'https://xs239613.xsrv.jp/api/netprint',
-        type: 'post',
-        data: formData,
-        processData: false,
-        contentType: false,
+        $.ajax({
+            url: 'https://xs239613.xsrv.jp/api/netprint',
+            type: 'post',
+            data: formData,
+            processData: false,
+            contentType: false,
 
-        beforeSend:function(){
-            $loading.removeClass("is-hide");
-        },
+            beforeSend:function(){
+                $loading.removeClass("is-hide");
+            },
 
-        success: function(data){
+            success: function(data){
 
-            $loading.addClass("is-hide");
+                $loading.addClass("is-hide");
 
-            if (data.result =="OK") {
-                let html_data = '<button id="netprint" type="button" class="btn btn-secondary">ネットプリントに登録</button>&nbsp;';
-                html_data += '<a href="https://networkprint.ne.jp/" target="_blank">';
-                html_data += '<img src="img/netprint_rogo.png" width="150px">';
-                html_data += '</a><br>';
-                html_data += 'ユーザー番号: '+data.user_code+' &nbsp;';
-                html_data += '<a href='+data.preview_url+' target="_blank">プレビュー</a>'
+                if (data.result =="OK") {
+                    let html_data = '<button id="netprint" type="button" class="btn btn-secondary">ネットプリントに登録</button>&nbsp;';
+                    html_data += '<a href="https://networkprint.ne.jp/" target="_blank">';
+                    html_data += '<img src="img/netprint_rogo.png" width="150px">';
+                    html_data += '</a><br>';
+                    html_data += 'ユーザー番号: '+data.user_code+' &nbsp;';
+                    html_data += '<a href='+data.preview_url+' target="_blank">プレビュー</a>'
 
-                $("#netprint").html(html_data)
+                    $("#netprint").html(html_data)
 
-            } else {
-                let html_data = '<button id="netprint" type="button" class="btn btn-secondary">ネットプリントに登録</button>&nbsp;';
-                html_data += '<a href="https://networkprint.ne.jp/" target="_blank">';
-                html_data += '<img src="img/netprint_rogo.png" width="30%">';
-                html_data += '</a><br>';
-                html_data += '登録できませんでした。';
+                } else {
+                    let html_data = '<button id="netprint" type="button" class="btn btn-secondary">ネットプリントに登録</button>&nbsp;';
+                    html_data += '<a href="https://networkprint.ne.jp/" target="_blank">';
+                    html_data += '<img src="img/netprint_rogo.png" width="150px">';
+                    html_data += '</a><br>';
+                    html_data += '登録できませんでした。';
 
-                $("#netprint").html(html_data)
+                    $("#netprint").html(html_data)
+                }
             }
-        }
-    });
+        });
+    
+    } else {
+        let html_data = '<button id="netprint" type="button" class="btn btn-secondary">ネットプリントに登録</button>&nbsp;';
+        html_data += '<a href="https://networkprint.ne.jp/" target="_blank">';
+        html_data += '<img src="img/netprint_rogo.png" width="150px">';
+        html_data += '</a><br>';
+        html_data += '登録する画像を作成してください。';
+
+        $("#netprint").html(html_data)
+    }
 });
