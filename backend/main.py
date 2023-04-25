@@ -1,7 +1,11 @@
+import os
+os.environ["OPENBLAS_NUM_THREADS"] = "4"
+os.environ["MKL_NUM_THREADS"] = "4"
+os.environ["VECLIB_NUM_THREADS"] = "4"
+
 import io
 import base64
 import sys
-import os
 
 from fastapi import FastAPI, Response, File, UploadFile
 from fastapi.responses import JSONResponse
