@@ -27,7 +27,7 @@ app.add_middleware(
 @app.get("/api/mapper", response_class=JSONResponse)
 def mapper(lat0: float, lat1: float, lon0: float, lon1: float, magnetic_north_line: bool):
 
-    fig = altmap.createTopographic(lat0, lon0, lat1, lon1, magnetic_north_line, max_length=4000)
+    fig = altmap.createTopographic(lat0, lon0, lat1, lon1, magnetic_north_line, max_length=3000)
     if fig == None:
         return JSONResponse({"datab64":"too large"})
     png_output = io.BytesIO()
