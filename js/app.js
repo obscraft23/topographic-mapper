@@ -66,7 +66,7 @@ $("#netprint").click(function(){
             if (data.result =="OK") {
                 let html_data = '<button id="netprint" type="button" class="btn btn-secondary">ネットプリントに登録</button>&nbsp;';
                 html_data += '<a href="https://networkprint.ne.jp/" target="_blank">';
-                html_data += '<img src="img/netprint_rogo.png" width="20%">';
+                html_data += '<img src="img/netprint_rogo.png" width="150px">';
                 html_data += '</a><br>';
                 html_data += 'ユーザー番号: '+data.user_code+' &nbsp;';
                 html_data += '<a href='+data.preview_url+' target="_blank">プレビュー</a>'
