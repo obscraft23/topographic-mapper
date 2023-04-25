@@ -20,3 +20,17 @@ areaSelect.on("change", function() {
 
 });
 areaSelect.addTo(map);
+
+var drawnItems = new L.FeatureGroup();
+map.addLayer(drawnItems);
+
+var drawControl = new L.Control.Draw({
+    edit: {
+        featureGroup: drawnItems
+    }
+});
+map.addControl(drawControl);
+
+
+var toolbar = L.Toolbar();
+toolbar.addToolbar(map);
