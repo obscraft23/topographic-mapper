@@ -28,7 +28,7 @@ app.add_middleware(
 )
 
 
-@app.get("/api/mapper", response_class=JSONResponse)
+@app.get("/topo/api/mapper", response_class=JSONResponse)
 def mapper(lat0: float, lat1: float, lon0: float, lon1: float, magnetic_north_line: bool):
 
     fig = altmap.createTopographic(lat0, lon0, lat1, lon1, magnetic_north_line, max_length=3000)
@@ -41,11 +41,11 @@ def mapper(lat0: float, lat1: float, lon0: float, lon1: float, magnetic_north_li
 
     return JSONResponse(content={"datab64" :base64_data})
 
-@app.get("/healthz")
+@app.get("/topo/healthz")
 def health_check():
     return Response(content="OK\n")
 
-@app.post("/api/netprint", response_class=JSONResponse)
+@app.post("/topo/api/netprint", response_class=JSONResponse)
 def registerNetprint(file: UploadFile = File(...)):
 
     try:

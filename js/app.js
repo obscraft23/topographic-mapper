@@ -5,9 +5,9 @@ $("#create").click(function(){
     
     if ( mag_check.checked) {mag = 'true';}
     else {mag = 'false';}
-    //console.log('http://xs239613.xsrv.jp/api/mapper?lat0=' + lat0 + '&lon0=' + lon0 + '&lat1=' + lat1 + '&lon1=' + lon1 + '&magnetic_north_line=' + mag)
+    
     $.ajax({
-        url:'https://xs239613.xsrv.jp/api/mapper?lat0=' + lat0 + '&lon0=' + lon0 + '&lat1=' + lat1 + '&lon1=' + lon1 + '&magnetic_north_line=' + mag,
+        url:'https://xs239613.xsrv.jp/topo/api/mapper?lat0=' + lat0 + '&lon0=' + lon0 + '&lat1=' + lat1 + '&lon1=' + lon1 + '&magnetic_north_line=' + mag,
         type: "GET",
 
         beforeSend:function(){
@@ -51,7 +51,7 @@ $("#netprint").click(function(){
         formData.append('file', new Blob([file], { type: 'text/plain' }), 'tmp.base64');
 
         $.ajax({
-            url: 'https://xs239613.xsrv.jp/api/netprint',
+            url: 'https://xs239613.xsrv.jp/topo/api/netprint',
             type: 'post',
             data: formData,
             processData: false,
